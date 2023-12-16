@@ -10,7 +10,9 @@ import org.example.obj.AddressObject;
 import org.example.obj.AddressObjects;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,6 +25,7 @@ public class Main {
     private static final String ADDR_FILE_PATH = "C:\\Users\\Пользователь\\IdeaProjects\\TZ\\src\\main\\resources\\AS_ADDR_OBJ.XML";
     // Ссылка на файл иерархии
     private static final String HIERARCHY_FILE_PATH = "C:\\Users\\Пользователь\\IdeaProjects\\TZ\\src\\main\\resources\\AS_ADM_HIERARCHY.XML";
+
     public static void main(String[] args) throws JAXBException {
         // Вводные данные
         String date = "2010-01-01";
@@ -33,7 +36,7 @@ public class Main {
 
         // Map для сохранения даты(ключ) и ID объектов (значение)
         Map<String, String> addressDescriptions = getAddressDescriptions(date, objectIdArray);
-        // Цикл для формирования результата по примеру ТЗ
+        //  Цикл для формирования результата по примеру ТЗ
         for (String objectId : objectIdArray) {
             String description = addressDescriptions.get(objectId);
             System.out.println(objectId + ": " + description);
