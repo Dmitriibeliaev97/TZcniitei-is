@@ -1,10 +1,14 @@
 package org.example.obj;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Класс создания объекта из файла AS_ADDR_OBJ
@@ -12,7 +16,8 @@ import lombok.Data;
 @XmlRootElement(name = "AddressObject")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Data
-public class AddressObject {
+@NoArgsConstructor
+public class AddressObject implements Serializable {
     @XmlAttribute(name = "ID")
     private String ID;
     @XmlAttribute(name = "OBJECTID")
@@ -23,6 +28,7 @@ public class AddressObject {
     private String CHANGEID;
     @XmlAttribute(name = "NAME")
     private String NAME;
+    @Getter
     @XmlAttribute(name = "TYPENAME")
     private String TYPENAME;
     @XmlAttribute(name = "LEVEL")
@@ -43,10 +49,38 @@ public class AddressObject {
     private String ISACTUAL;
     @XmlAttribute(name = "ISACTIVE")
     private String ISACTIVE;
+    @XmlElement(name = "ADROBJECT", type = AddressObject.class)
+    private List<AddressObject> children;
+    private AddressObject parent; // родительский объект в иерархии
+
+    public AddressObject(String objectId, String s) {
+    }
+
+    public AddressObject(String parentObjectId) {
+    }
 
     @Override
     public String toString() {
         return TYPENAME + " " + NAME;
+    }
+
+    public List<AddressObject> getChildren() {
+        if (children == null) {
+            children = new ArrayList<>();
+        }
+        return children;
+    }
+
+    public String getFullAddress(Map<String, AddressObject> addressDataMap) {
+        // Возвращает полный адрес, переходя по иерархии вверх до корня
+        // Рassumption: root object has the same id and parent id
+        StringBuilder fullAddress = new StringBuilder(this.NAME);
+        AddressObject current = this;
+        while (current.parent != null) {
+            current = current.parent;
+            fullAddress.insert(0, current.NAME + ", ");
+        }
+        return fullAddress.toString();
     }
 
 }
